@@ -8,6 +8,8 @@ start = datetime.today() - timedelta(days=252)
 end = datetime.today()
 
 #descargar de yahoo finance
-SPY = yf.download('SPY', start, end)['Adj Close']
+data = yf.download(['AAPL', 'AMZN', 'FB'], start, end)['Adj Close']
 
-print(SPY.head(10))
+data.to_csv('acciones.csv')
+
+print(data.head(10))
