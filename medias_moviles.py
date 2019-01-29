@@ -11,11 +11,17 @@ pd.set_option('display.width', 1200)
 pd.set_option('display.max_columns', 50)
 pd.set_option('display.max_rows', 5000)
 
-
+#traemos el directorio actual
 dir_path = os.path.dirname(os.path.realpath(__file__))
 file = dir_path + '/SPY.csv'
+
+#leemos el archivo CSV
 data = pd.read_csv(file, parse_dates=True, index_col=0)
+
+#limpiamos los valores vacios
 data.dropna(inplace=True)
+
+#medias moviles
 short_avg = 18
 long_avg = 40
 
@@ -24,13 +30,18 @@ signals['signal'] = 0.0
 
 signals['short_avg'] = data['Close'].rolling(short_avg).mean()
 signals['long_avg'] = data['Close'].rolling(long_avg).mean()
-#
+
+# marcamos las señales
 signals['signal'][short_avg:] = np.where(signals['short_avg'][short_avg:] > signals['long_avg'][short_avg:], 1.0, 0.0)
 
+
 signals['position'] = signals['signal'].diff()
+
+#limpiamos los valores vacios
 signals.dropna(inplace=True)
 print(signals)
 
+#dibujamos el precio final y las medias moviles
 ax1 = plt.subplot()
 ax1.plot(data['Close'])
 ax1.plot(signals['short_avg'])
